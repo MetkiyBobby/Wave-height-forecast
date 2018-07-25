@@ -3,9 +3,11 @@
 # Вологодской области исходя из данных о направлении и скорости
 # ветра введенных пользователем
 
+import re # импорт модуля для работы с регулярными выражениями
+
 # Исходный массив данных
 
-WaveHightData = {
+waveHightData = {
     'North':    {'3-5': [0.17, 0.31],'6-8': [0.33, 0.48],
                 '8-11': [0.39, 0.68], '11-14': [0.48, 0.78],
                 '14-17': [0.60, 0,95], '17-21': [0.69, 1.10]},
@@ -23,7 +25,7 @@ WaveHightData = {
                 '14-17': [0.68, 0,86], '17-21': [0.78, 1.01]},
     'Southwest':{'3-5': [0.17, 0.25],'6-8': [0.30, 0.40],
                 '8-11': [0.42, 0.52], '11-14': [0.52, 0.69],
-                '14-17': [0.63, 0,80], '17-21': [0.74, 0.92]},
+                '14-17': [0.63, 0.80], '17-21': [0.74, 0.92]},
     'West':     {'3-5': [0.20, 0.27],'6-8': [0.32, 0.42],
                 '8-11': [0.44, 0.56], '11-14': [0.53, 0.67],
                 '14-17': [0.64, 0,87], '17-21': [0.75, 0.96]},
@@ -31,8 +33,65 @@ WaveHightData = {
                 '8-11': [0.48, 0.69], '11-14': [0.58, 0.83],
                 '14-17': [0.77, 1.01], '17-21': [0.81, 1.18]}}
     
+def directionOfTheWindInput():
+    """Функция запрашивает у пользователя направление ветра"""
+    windDirectionNumber = 9 # переменной присваивается неспользуемое значение    
+    while not (windDirectionNumber in list(range(1, 9))):
+        print('Выберите направление ветра \n(наберите на клавиатуре' +
+              'соответствующую цифру и нажмите клавишу \'ENTER\'\n' +
+              'С(1), СВ(2), В(3), ЮВ(4), Ю(5), ЮЗ(6), З(7), СЗ(8)')
+        try:
+            windDirectionNumber = int(input())
+        except ValueError:
+            print('Необходимо ввести цифру от 1 до 8')
+            continue
+        if windDirectionNumber not in list(range (1, 9)):
+            print('Необходимо ввести цифру от 1 до 8')        
+    return windDirectionNumber
 
-# TODO: Запрос у пользователя на ввод направления ветра, скорости
-# ветра и наличия порывов
+def directionOfTheWindReturn(number):
+    """Функция возвращает направление ветра из словаря waveHightData"""
+    windDirectionList = list(waveHightData.keys())
+    windDirection = None
+    windDirection = windDirectionList[number - 1]
+    return windDirection
+
+
+def windSpeedInput():
+    """Функция запрашивает у пользователя скорость ветра"""
+    windSpeedRegex = re.compile(r'\d+-\d+')
+    while True:
+        print()
+        print('Введите скорость ветра в формате 5-10, 7-12 и т.п., затем' +
+              ' нажмите\nклавишу \'ENTER\'\n(порывы не указываются!)')
+        windSpeed = str(input())
+        mo = windSpeedRegex.search(windSpeed)
+        if mo:
+            break
+    return windSpeed
+
+def windGustsInput():
+    """Функция запрашивает у пользователя порывы ветра"""
+    while True:
+        print()
+        print('Введите порыв ветра и нажмите клавишу \'ENTER\'')
+        try:
+            windGusts = int(input())
+            break
+        except ValueError:
+            print('Необходимо ввести одно число')
+            continue
+    return windGusts
+        
+    
+step1 = directionOfTheWindInput()
+print(directionOfTheWindReturn(step1))
+step2 = windSpeedInput()
+print(step2)
+step3 = windGustsInput()
+print(step3)             
+    
+            
+
 # TODO: Расчет выосты волны исходя из введенных данных
 # TODO: Вывод результата
